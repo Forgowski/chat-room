@@ -3,6 +3,17 @@ import random
 from threading import Thread
 from datetime import datetime
 from colorama import Fore, init, Back
+from tkinter import *
+
+chat = Tk()
+chat.config(height=600, width=600, pady=10, padx=10, background="black")
+chat.title("Chat room by Forg")
+text_box = Text(bg="white", width=20, height=1)
+send_button = Button(text="send", )
+wall = Canvas(height=300, width=300, background="#b5f0f3")
+wall.grid(columnspan=2, row=1, pady=50)
+send_button.grid(row=2, column=1)
+text_box.grid(row=2, column=0)
 
 init()
 
@@ -23,7 +34,7 @@ print(f"[*] Connecting to {SERVER_HOST} : {SERVER_PORT}...")
 s.connect((SERVER_HOST, SERVER_PORT))
 print("[+] Connected")
 
-
+chat.mainloop()
 name = input("Enter your name: ")
 
 
