@@ -51,6 +51,14 @@ class Client:
         self.win.protocol("WM_DELETE_WINDOW", self.stop)
         self.win.mainloop()
 
+
+    def write(self):
+        pass
+    def stop(self):
+        self.running = False
+        self.win.destroy()
+        self.sock.close()
+        exit(0)
     def receive(self):
         pass
 
