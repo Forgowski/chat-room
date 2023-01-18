@@ -7,9 +7,10 @@ from tkinter import simpledialog
 HOST = "127.0.0.1"
 PORT = 9090
 
+
 class Client:
     def __init__(self, host, port):
-        self.sock =socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect((host, port))
 
         msg = tkinter.Tk()
@@ -27,8 +28,8 @@ class Client:
 
     def gui_loop(self):
         self.win = tkinter.Tk()
-        self.win.configure(bg="darkgray")
-        self.chat_label = tkinter.Label(self.win, text="Chat", bg="darkgray")
+        self.win.configure(bg="lightgray")
+        self.chat_label = tkinter.Label(self.win, text="Chat", bg="lightgray")
         self.chat_label.config(font=("Arial", 12))
         self.chat_label.pack(padx=20, pady=10)
 
@@ -36,7 +37,7 @@ class Client:
         self.text_area.pack(padx=20, pady=10)
         self.text_area.config(state='disabled')
 
-        self.msg_label = tkinter.Label(self.win, text="message", bg="darkgray")
+        self.msg_label = tkinter.Label(self.win, text="message", bg="lightgray")
         self.msg_label.config(font=("Arial", 12))
         self.msg_label.pack(padx=20, pady=10)
 
@@ -51,16 +52,17 @@ class Client:
         self.win.protocol("WM_DELETE_WINDOW", self.stop)
         self.win.mainloop()
 
-
     def write(self):
         message = f"{self.nickname}: {self.input_area.get('1.0', 'end')}".encode("utf-8")
         self.sock.send(message)
         self.input_area.delete('1.0', 'end')
+
     def stop(self):
         self.running = False
         self.win.destroy()
         self.sock.close()
         exit(0)
+
     def receive(self):
         while self.running:
             try:
@@ -80,5 +82,5 @@ class Client:
                 self.sock.close()
                 break
 
-client = Client(HOST, PORT)
 
+client = Client(HOST, PORT)
