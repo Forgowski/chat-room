@@ -27,8 +27,8 @@ class Client:
 
     def gui_loop(self):
         self.win = tkinter.Tk()
-        self.win.configure(bg="dark")
-        self.chat_label = tkinter.Label(self.win, text="Chat", bg="dark")
+        self.win.configure(bg="darkgray")
+        self.chat_label = tkinter.Label(self.win, text="Chat", bg="darkgray")
         self.chat_label.config(font=("Arial", 12))
         self.chat_label.pack(padx=20, pady=10)
 
@@ -36,14 +36,14 @@ class Client:
         self.text_area.pack(padx=20, pady=10)
         self.text_area.config(state='disabled')
 
-        self.msg_label = tkinter.Label(self.win, text="message", bg="dark")
+        self.msg_label = tkinter.Label(self.win, text="message", bg="darkgray")
         self.msg_label.config(font=("Arial", 12))
         self.msg_label.pack(padx=20, pady=10)
 
         self.input_area = tkinter.Text(self.win, height=3)
         self.input_area.pack(padx=20, pady=10)
 
-        self.send_button = tkinter.Button(self.win, text="send", command=self.write())
+        self.send_button = tkinter.Button(self.win, text="send", command=self.write)
         self.send_button.config(font=("Arial", 12))
         self.send_button.pack(padx=20, pady=10)
 
@@ -62,5 +62,23 @@ class Client:
         self.sock.close()
         exit(0)
     def receive(self):
-        pass
+        while self.running:
+            try:
+                message = self.sock.recv(1024)
+                if message == 'NICK':
+                    self.sock.send(self.nickname.encode("utf-8"))
+                else:
+                    if self.gui_done:
+                        self.text_area.config(state='normal')
+                        self.text_area.insert('end', message)
+                        self.text_area.yview('end')
+                        self.text_area.config(state="disabled")
+            except ConnectionAbortedError:
+                break
+            except:
+                print("error")
+                self.sock.close()
+                break
+
+client = Client(HOST, PORT)
 
