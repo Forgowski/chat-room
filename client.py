@@ -53,7 +53,9 @@ class Client:
 
 
     def write(self):
-        pass
+        message = f"{self.nickname}: {self.input_area.get('1.0', 'end')}"
+        self.sock.send(message.encode('utf-8'))
+        self.input_area.delete('1.0', 'end')
     def stop(self):
         self.running = False
         self.win.destroy()
