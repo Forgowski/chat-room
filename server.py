@@ -23,11 +23,11 @@ def handle(client):
     while True:
         try:
             message = client.recv(1024)
-            print(f"{nicknames[clients.index(client)]}")
+            print(f"{nicknames[clients.index(client)]} says {message}")
             broadcast(message)
         except:
-            index = client.index(client)
-            client.remove(client)
+            index = clients.index(client)
+            clients.remove(client)
             client.close()
             nickname = nicknames[index]
             nicknames.remove(nickname)
@@ -42,7 +42,7 @@ def receive():
         nickname = client.recv(1024)
         nicknames.append(nickname)
         clients.append(client)
-        client.send("connected to the server".encode("utf-8"))
+        client.send("\nconnected to the server \n".encode("utf-8"))
 
         thread = threading.Thread(target=handle, args=(client,))
         thread.start()

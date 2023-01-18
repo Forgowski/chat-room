@@ -53,8 +53,8 @@ class Client:
 
 
     def write(self):
-        message = f"{self.nickname}: {self.input_area.get('1.0', 'end')}"
-        self.sock.send(message.encode('utf-8'))
+        message = f"{self.nickname}: {self.input_area.get('1.0', 'end')}".encode("utf-8")
+        self.sock.send(message)
         self.input_area.delete('1.0', 'end')
     def stop(self):
         self.running = False
@@ -64,7 +64,7 @@ class Client:
     def receive(self):
         while self.running:
             try:
-                message = self.sock.recv(1024)
+                message = self.sock.recv(1024).decode("utf-8")
                 if message == 'NICK':
                     self.sock.send(self.nickname.encode("utf-8"))
                 else:
