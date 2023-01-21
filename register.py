@@ -31,6 +31,8 @@ class Register:
     def check_data(self):
         if self.password.get() != self.password_repeated.get():
             messagebox.showerror(title="Error", message="Passwords are different")
+        else:
+            if
 
 
 Register()
