@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
+import data_base
 import register
 
 
@@ -29,7 +30,11 @@ class Logging:
         self.win.mainloop()
 
     def log_in(self):
-        pass
+        if data_base.log_in(self.login.get(), self.password.get()):
+            pass
+        else:
+            messagebox.showerror(title="Error", message="Wrong login or password")
+
 
     def register(self):
         register.Register(self.win)

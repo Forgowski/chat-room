@@ -27,3 +27,11 @@ def register_client(login, password):
     cur.execute("INSERT INTO userdata (username, password, admin) VALUES (?, ?, ?)", (login, password, 0))
     conn.commit()
 
+def log_in(login, password):
+    if hashlib.sha256(password.encode()).hexdigest() == cur.execute(
+            "select * from (SELECT password FROM userdata WHERE username = ?) up", (login,)).fetchone()[0]:
+        return 1
+    else:
+        return 0
+
+

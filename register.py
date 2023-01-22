@@ -43,6 +43,6 @@ class Register(tkinter.Toplevel):
         if self.compare_passwords():
             if data_base.if_used(self.login.get()):
                 data_base.register_client(self.login.get(), self.password.get())
-                self.win.destroy()
+                self.destroy()
         else:
             pass
