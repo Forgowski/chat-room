@@ -9,21 +9,21 @@ cur.execute("""
 CREATE TABLE IF NOT EXISTS userdata (
     id INTEGER PRIMARY KEY,
     username VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL
+    password VARCHAR(255) NOT NULL,
+    admin INTEGER(8) NOT NULL
 )
 """)
 
-username1, password1 = "forgowski", hashlib.sha256("password".encode()).hexdigest()
-
-cur.execute("INSERT INTO userdata (username, password) VALUES (?, ?)", (username1, password1))
-conn.commit()
-
-
 def if_used(login):
     if cur.execute("SELECT * FROM userdata WHERE username = ?", (login,)).fetchone() is None:
-        pass
+        return 1
     else:
         messagebox.showerror(title="Error", message="login not available")
+        return 0
 
 
-if_used("forgowsk")
+def register_client(login, password):
+    password = hashlib.sha256(password.encode()).hexdigest()
+    cur.execute("INSERT INTO userdata (username, password, admin) VALUES (?, ?, ?)", (login, password, 0))
+    conn.commit()
+

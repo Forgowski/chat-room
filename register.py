@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
+import data_base
 
 
 class Register:
@@ -24,15 +25,23 @@ class Register:
         self.password_repeated = Entry()
         self.password_repeated.pack(padx=20, pady=5)
 
-        self.submit = Button(text="register", command=self.check_data)
+        self.submit = Button(text="register", command=self.try_register)
         self.submit.pack(padx=20, pady=20)
         self.win.mainloop()
 
-    def check_data(self):
+    def compare_passwords(self):
         if self.password.get() != self.password_repeated.get():
             messagebox.showerror(title="Error", message="Passwords are different")
+            return 0
+        else:
+            return 1
+
+    def try_register(self):
+        if self.compare_passwords():
+            if data_base.if_used(self.login.get()):
+                data_base.register_client(self.login.get(), self.password.get())
+                self.win.destroy()
         else:
             pass
-
 
 Register()
