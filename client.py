@@ -28,6 +28,7 @@ class Client:
 
     def gui_loop(self):
         self.win = tkinter.Tk()
+        self.win.title("Chat")
         self.win.configure(bg="lightgray")
         self.chat_label = tkinter.Label(self.win, text="Chat", bg="lightgray")
         self.chat_label.config(font=("Arial", 12))
