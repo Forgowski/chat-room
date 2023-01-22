@@ -32,7 +32,7 @@ class Register:
         if self.password.get() != self.password_repeated.get():
             messagebox.showerror(title="Error", message="Passwords are different")
         else:
-            if
+            pass
 
 
 Register()

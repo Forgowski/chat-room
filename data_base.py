@@ -1,5 +1,6 @@
 import sqlite3
 import hashlib
+from tkinter import messagebox
 
 conn = sqlite3.connect("userdata.db")
 cur = conn.cursor()
@@ -19,7 +20,10 @@ conn.commit()
 
 
 def if_used(login):
-    print(cur.execute("SELECT username FROM userdata").fetchone())
+    if cur.execute("SELECT * FROM userdata WHERE username = ?", (login,)).fetchone() is None:
+        pass
+    else:
+        messagebox.showerror(title="Error", message="login not available")
 
 
-if_used("fsa")
+if_used("forgowsk")
