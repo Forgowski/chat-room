@@ -9,6 +9,7 @@ class Logging:
         self.win = Tk()
         self.win.title("login")
         self.win.configure(bg="lightgray")
+        self.nickname = None
 
         self.l1 = Label(text="Login", bg="lightgray")
         self.l1.pack(padx=20, pady=1)
@@ -29,15 +30,15 @@ class Logging:
         self.reg.pack(padx=20, pady=5)
         self.win.mainloop()
 
+    def __del__(self):
+        return self.nickname
+
     def log_in(self):
         if data_base.log_in(self.login.get(), self.password.get()):
-            pass
+            self.nickname = self.login.get()
+            self.win.destroy()
         else:
             messagebox.showerror(title="Error", message="Wrong login or password")
 
-
     def register(self):
         register.Register(self.win)
-
-
-Logging()

@@ -2,7 +2,7 @@ import socket
 import threading
 import tkinter
 import tkinter.scrolledtext
-from tkinter import simpledialog
+import logging
 
 HOST = "127.0.0.1"
 PORT = 9090
@@ -10,13 +10,17 @@ PORT = 9090
 
 class Client:
     def __init__(self, host, port):
+        self.log = logging.Logging()
+        self.nickname = self.log.__del__()
+        print(self.nickname)
+
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect((host, port))
 
         msg = tkinter.Tk()
         msg.withdraw()
 
-        self.nickname = simpledialog.askstring("Nickname ", "choose nickname", parent=msg)
+
         self.gui_done = False
         self.running = True
 
