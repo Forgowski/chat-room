@@ -12,7 +12,8 @@ class Client:
     def __init__(self, host, port):
         self.log = logging.Logging()
         self.nickname = self.log.__del__()
-        print(self.nickname)
+        if self.nickname is None:
+            exit()
 
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect((host, port))
