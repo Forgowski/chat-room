@@ -28,8 +28,11 @@ def register_client(login, password):
     conn.commit()
 
 def log_in(login, password):
+    if cur.execute("SELECT * FROM userdata WHERE username = ?", (login,)).fetchone() is None:
+        return 0
+
     if hashlib.sha256(password.encode()).hexdigest() == cur.execute(
-            "select * from (SELECT password FROM userdata WHERE username = ?) up", (login,)).fetchone()[0]:
+            "select * from (select * from (SELECT password FROM userdata WHERE username = ?))", (login,)).fetchone()[0]:
         return 1
     else:
         return 0
