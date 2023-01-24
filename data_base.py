@@ -38,3 +38,8 @@ def log_in(login, password):
         return 0
 
 
+def check_permission(login):
+    if cur.execute("select * from (select * from (SELECT admin FROM userdata WHERE username = ?))", (login,)).fetchone()[0]:
+        return 1
+    else:
+        return 0
