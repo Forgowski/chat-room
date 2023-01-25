@@ -26,10 +26,8 @@ class Client:
         self.running = True
 
         gui_thread = threading.Thread(target=self.gui_loop)
-        receive_thread = threading.Thread(target=self.receive)
-
         gui_thread.start()
-        receive_thread.start()
+
 
     def gui_loop(self):
         self.win = tkinter.Tk()
@@ -55,6 +53,7 @@ class Client:
         self.send_button.pack(padx=20, pady=10)
 
         self.gui_done = True
+        self.start_receive()
         self.win.protocol("WM_DELETE_WINDOW", self.stop)
         self.win.mainloop()
 
@@ -87,6 +86,9 @@ class Client:
                 print("error")
                 self.sock.close()
                 break
+    def start_receive(self):
+        receive_thread = threading.Thread(target=self.receive)
+        receive_thread.start()
 
 
 client = Client(HOST, PORT)
