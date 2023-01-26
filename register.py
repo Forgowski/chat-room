@@ -19,13 +19,13 @@ class Register(tkinter.Toplevel):
         self.l2 = Label(self, text="Password", bg="lightgray")
         self.l2.pack(padx=20, pady=1)
 
-        self.password = Entry(self)
+        self.password = Entry(self, show="*")
         self.password.pack(padx=20, pady=5)
 
         self.l3 = Label(self, text="Repeat password", bg="lightgray")
         self.l3.pack(padx=20, pady=1)
 
-        self.password_repeated = Entry(self)
+        self.password_repeated = Entry(self, show="*")
         self.password_repeated.pack(padx=20, pady=5)
 
         self.submit = Button(self, text="register", command=self.try_register)

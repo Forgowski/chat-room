@@ -20,7 +20,7 @@ class Logging:
         self.l2 = Label(text="Password", bg="lightgray")
         self.l2.pack(padx=20, pady=1)
 
-        self.password = Entry()
+        self.password = Entry(show="*")
         self.password.pack(padx=20, pady=5)
 
         self.try_log = Button(text="log in", command=self.log_in)
