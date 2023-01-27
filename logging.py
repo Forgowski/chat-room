@@ -1,11 +1,12 @@
 from tkinter import *
 from tkinter import messagebox
-import data_base
 import register
 
 
 class Logging:
-    def __init__(self):
+    def __init__(self, sock):
+        self.flag = 1
+        self.sock = sock
         self.win = Tk()
         self.win.title("login")
         self.win.configure(bg="lightgray")
@@ -30,15 +31,26 @@ class Logging:
         self.reg.pack(padx=20, pady=5)
         self.win.mainloop()
 
-    def __del__(self):
-        return self.nickname
+    def __del__(self, flag=0):
+        return flag
 
     def log_in(self):
-        if data_base.log_in(self.login.get(), self.password.get()):
-            self.nickname = self.login.get()
+        self.sock.send(self.login.get().encode("utf-8"))
+        print("x")
+        self.sock.send(self.password.get().encode("utf-8"))
+        print("z")
+        is_ok = self.sock.recv(1024).decode("utf-8")
+        print("y")
+        if is_ok == "1":
+            messagebox.showinfo(title="Hello", message=f"Hi {self.login.get()}")
             self.win.destroy()
-        else:
+            self.__del__(1)
+        elif is_ok == '0':
             messagebox.showerror(title="Error", message="Wrong login or password")
+        else:
+            messagebox.showerror(title="Error", message="Too many mistakes try again later")
+            self.win.destroy()
+            self.__del__(0)
 
     def register(self):
         register.Register(self.win)

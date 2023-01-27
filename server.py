@@ -14,13 +14,64 @@ clients = []
 nicknames = []
 
 
-def broadcast(message):
-    for client in clients:
-        client.send(message)
+def receive():
+    while True:
+        client, address = server.accept()
+        print(f"Connected with {str(address)}!")
+
+        connecting_thread = threading.Thread(target=connecting, args=(client,))
+        connecting_thread.start()
+
+
+def connecting(client):
+    try:
+        _, nick = connect_account(client)
+    except:
+        client.close()
+        return 0
+    if _:
+        try:
+            with open('ban_list.txt', 'r') as f:
+                ban_list = f.readline()
+                if str(nick) in ban_list:
+                    client.send("[SERVER]You are banned".encode("utf-8"))
+                    client.close()
+        except:
+            pass
+        client.send(f"NICK{nick}".encode("utf-8"))
+        nicknames.append(nick)
+        clients.append(client)
+        broadcast(f"[SERVER]{nick} connected to the server \n".encode("utf-8"))
+        is_admin = data_base.check_permission(nick)
+        thread = threading.Thread(target=handle, args=(client, is_admin))
+        thread.start()
+        return 0
+
+
+def connect_account(client):
+    try:
+        range = 5
+        while range:
+            nick = client.recv(1024).decode("utf-8")
+            password = client.recv(1024).decode("utf-8")
+            if data_base.log_in(nick, password):
+                client.send("1".encode("utf-8"))
+                return 1, nick
+            else:
+                client.send("0".encode("utf-8"))
+                range -= 1
+
+        client.send("Too many mistakes try later".encode("utf-8"))
+        client.close()
+
+    except:
+        client.close()
+
+
 
 
 def handle(client, is_admin):
-    nick = nicknames[clients.index(client)].decode("utf-8")
+    nick = nicknames[clients.index(client)]
     while True:
         try:
             message = client.recv(1024)
@@ -45,28 +96,9 @@ def handle(client, is_admin):
             break
 
 
-def receive():
-    while True:
-        client, address = server.accept()
-        print(f"Connected with {str(address)}!")
-        client.send("NICK".encode('utf-8'))
-        nickname = client.recv(1024)
-        print(nickname)
-        try:
-            with open('ban_list.txt', 'r') as f:
-                ban_list = f.readline()
-                if str(nickname) in ban_list:
-                    client.send("[SERVER]You are banned".encode("utf-8"))
-                    client.close()
-                    continue
-        except:
-            pass
-        nicknames.append(nickname)
-        clients.append(client)
-        broadcast(f"[SERVER]{nickname.decode('utf-8')} connected to the server \n".encode("utf-8"))
-        is_admin = data_base.check_permission(nickname.decode("utf-8"))
-        thread = threading.Thread(target=handle, args=(client, is_admin))
-        thread.start()
+def broadcast(message):
+    for client in clients:
+        client.send(message)
 
 
 def check_commands(msg):
@@ -104,6 +136,8 @@ def ban(nick_to_ban):
             f.write(f"{nick_to_ban}\n")
     except:
         pass
+
+
 
 
 print("server running")

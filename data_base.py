@@ -2,7 +2,7 @@ import sqlite3
 import hashlib
 from tkinter import messagebox
 
-conn = sqlite3.connect("userdata.db")
+conn = sqlite3.connect("userdata.db", check_same_thread=False)
 cur = conn.cursor()
 
 cur.execute("""

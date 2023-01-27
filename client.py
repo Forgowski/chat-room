@@ -10,17 +10,13 @@ PORT = 9090
 
 class Client:
     def __init__(self, host, port):
-        self.log = logging.Logging()
-        self.nickname = self.log.__del__()
-        if self.nickname is None:
-            exit()
-
+        self.nickname = None
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect((host, port))
-
+        if not logging.Logging(self.sock):
+            exit()
         msg = tkinter.Tk()
         msg.withdraw()
-
 
         self.gui_done = False
         self.running = True
@@ -33,6 +29,7 @@ class Client:
         self.win = tkinter.Tk()
         self.win.title("Chat")
         self.win.configure(bg="lightgray")
+
         self.chat_label = tkinter.Label(self.win, text="Chat", bg="lightgray")
         self.chat_label.config(font=("Arial", 12))
         self.chat_label.pack(padx=20, pady=10)
@@ -72,8 +69,8 @@ class Client:
         while self.running:
             try:
                 message = self.sock.recv(1024).decode("utf-8")
-                if message == 'NICK':
-                    self.sock.send(self.nickname.encode("utf-8"))
+                if message.startswith("NICK"):
+                    self.nickname = message[4:]
                 else:
                     if self.gui_done:
                         self.text_area.config(state='normal')
