@@ -10,7 +10,6 @@ PORT = 9090
 
 class Client:
     def __init__(self, host, port):
-        self.nickname = None
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect((host, port))
         if not logging.Logging(self.sock):
@@ -55,7 +54,7 @@ class Client:
         self.win.mainloop()
 
     def write(self):
-        message = f"{self.nickname}: {self.input_area.get('1.0', 'end')}".encode("utf-8")
+        message = f"{self.input_area.get('1.0', 'end')}".encode("utf-8")
         self.sock.send(message)
         self.input_area.delete('1.0', 'end')
 
@@ -69,20 +68,18 @@ class Client:
         while self.running:
             try:
                 message = self.sock.recv(1024).decode("utf-8")
-                if message.startswith("NICK"):
-                    self.nickname = message[4:]
-                else:
-                    if self.gui_done:
-                        self.text_area.config(state='normal')
-                        self.text_area.insert('end', message)
-                        self.text_area.yview('end')
-                        self.text_area.config(state="disabled")
+                if self.gui_done:
+                    self.text_area.config(state='normal')
+                    self.text_area.insert('end', message)
+                    self.text_area.yview('end')
+                    self.text_area.config(state="disabled")
             except ConnectionAbortedError:
                 break
             except:
                 print("error")
                 self.sock.close()
                 break
+
     def start_receive(self):
         receive_thread = threading.Thread(target=self.receive)
         receive_thread.start()

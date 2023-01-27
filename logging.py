@@ -36,11 +36,8 @@ class Logging:
 
     def log_in(self):
         self.sock.send(self.login.get().encode("utf-8"))
-        print("x")
         self.sock.send(self.password.get().encode("utf-8"))
-        print("z")
         is_ok = self.sock.recv(1024).decode("utf-8")
-        print("y")
         if is_ok == "1":
             messagebox.showinfo(title="Hello", message=f"Hi {self.login.get()}")
             self.win.destroy()

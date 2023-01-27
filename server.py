@@ -36,16 +36,17 @@ def connecting(client):
                 if str(nick) in ban_list:
                     client.send("[SERVER]You are banned".encode("utf-8"))
                     client.close()
+                    return 0
         except:
             pass
-        client.send(f"NICK{nick}".encode("utf-8"))
         nicknames.append(nick)
         clients.append(client)
         broadcast(f"[SERVER]{nick} connected to the server \n".encode("utf-8"))
         is_admin = data_base.check_permission(nick)
-        thread = threading.Thread(target=handle, args=(client, is_admin))
+        thread = threading.Thread(target=handle, args=(client, is_admin, nick))
         thread.start()
-        return 0
+
+    return 0
 
 
 def connect_account(client):
@@ -68,15 +69,11 @@ def connect_account(client):
         client.close()
 
 
-
-
-def handle(client, is_admin):
-    nick = nicknames[clients.index(client)]
+def handle(client, is_admin, nick):
     while True:
         try:
             message = client.recv(1024)
-            print(message)
-            msg = message[len(nicknames[clients.index(client)]) + 2: -1].decode("utf-8")
+            msg = message[: -1].decode("utf-8")
 
             if msg.startswith("/"):
                 if is_admin:
@@ -85,7 +82,8 @@ def handle(client, is_admin):
                 else:
                     client.send("[SERVER]You don't have permission\n".encode('utf-8'))
             else:
-                print(f"{nick} says {message}")
+                message = f"{nick}: {msg}\n".encode('utf-8')
+                print(message[:-1])
                 broadcast(message)
         except:
             index = clients.index(client)
