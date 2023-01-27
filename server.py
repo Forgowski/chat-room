@@ -101,11 +101,11 @@ def broadcast(message):
 
 def check_commands(msg):
     if msg.startswith("/kick"):
-        kick(msg[6:].encode("utf-8"))
+        kick(msg[6:])
         return 1
 
     elif msg.startswith("/ban"):
-        ban(msg[5:].encode("utf-8"))
+        ban(msg[5:])
         return 1
 
     else:
