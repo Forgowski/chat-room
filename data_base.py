@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS userdata (
 )
 """)
 
+
 def if_used(login):
     if cur.execute("SELECT * FROM userdata WHERE username = ?", (login,)).fetchone() is None:
         return 1
@@ -26,6 +27,7 @@ def register_client(login, password):
     password = hashlib.sha256(password.encode()).hexdigest()
     cur.execute("INSERT INTO userdata (username, password, admin) VALUES (?, ?, ?)", (login, password, 0))
     conn.commit()
+
 
 def log_in(login, password):
     if cur.execute("SELECT * FROM userdata WHERE username = ?", (login,)).fetchone() is None:

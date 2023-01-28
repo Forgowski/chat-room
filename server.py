@@ -136,7 +136,5 @@ def ban(nick_to_ban):
         pass
 
 
-
-
 print("server running")
 receive()
