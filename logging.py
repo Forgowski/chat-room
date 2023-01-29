@@ -35,8 +35,7 @@ class Logging:
         return flag
 
     def log_in(self):
-        self.sock.send(self.login.get().encode("utf-8"))
-        self.sock.send(self.password.get().encode("utf-8"))
+        self.sock.send(f"L {self.login.get()} {self.password.get()}".encode("utf-8"))
         is_ok = self.sock.recv(1024).decode("utf-8")
         if is_ok == "1":
             messagebox.showinfo(title="Hello", message=f"Hi {self.login.get()}")
@@ -50,4 +49,4 @@ class Logging:
             self.__del__(0)
 
     def register(self):
-        register.Register(self.win)
+        register.Register(self.win, self.sock)

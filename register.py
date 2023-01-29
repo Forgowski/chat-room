@@ -1,11 +1,10 @@
 import tkinter
 from tkinter import *
 from tkinter import messagebox
-import data_base
-
 
 class Register(tkinter.Toplevel):
-    def __init__(self, root):
+    def __init__(self, root, sock):
+        self.sock = sock
         super().__init__(root)
         self.geometry("300x250")
         self.title("registration")
@@ -41,8 +40,14 @@ class Register(tkinter.Toplevel):
 
     def try_register(self):
         if self.compare_passwords():
-            if data_base.if_used(self.login.get()):
-                data_base.register_client(self.login.get(), self.password.get())
-                self.destroy()
-        else:
-            pass
+            try:
+                self.sock.send(f"R {self.login.get()} {self.password.get()}".encode("utf-8"))
+                recv = self.sock.recv(1024).decode("utf-8")
+                if recv == "1":
+                    messagebox.showinfo(title="Well done", message="registered successfully")
+                    self.destroy()
+                elif recv == '0':
+                    messagebox.showerror(title="Error", message="This login is unavailable")
+
+            except:
+                print("cos nie tak")

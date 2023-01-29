@@ -24,12 +24,22 @@ def receive():
 
 
 def connecting(client):
-    try:
-        _, nick = connect_account(client)
-    except:
-        client.close()
-        return 0
-    if _:
+    flag = True
+
+    while flag:
+
+        try:
+            _, nick = connect_account(client)
+            if _ == 1:
+                flag = False
+            elif _ == 0:
+                client.close()
+                return 0
+        except:
+            client.close()
+            return 0
+
+    if _ == 1:
         try:
             with open('ban_list.txt', 'r') as f:
                 ban_list = f.readline()
@@ -39,35 +49,49 @@ def connecting(client):
                     return 0
         except:
             pass
-        nicknames.append(nick)
-        clients.append(client)
-        broadcast(f"[SERVER]{nick} connected to the server \n".encode("utf-8"))
-        is_admin = data_base.check_permission(nick)
-        thread = threading.Thread(target=handle, args=(client, is_admin, nick))
-        thread.start()
-
-    return 0
+        if nick is not None:
+            nicknames.append(nick)
+            clients.append(client)
+            broadcast(f"[SERVER]{nick} connected to the server \n".encode("utf-8"))
+            is_admin = data_base.check_permission(nick)
+            thread = threading.Thread(target=handle, args=(client, is_admin, nick))
+            thread.start()
+        else:
+            client.close()
+            return 0
+    else:
+        client.close()
+        return 0
 
 
 def connect_account(client):
     try:
         range = 5
         while range:
-            nick = client.recv(1024).decode("utf-8")
-            password = client.recv(1024).decode("utf-8")
-            if data_base.log_in(nick, password):
-                client.send("1".encode("utf-8"))
-                return 1, nick
-            else:
-                client.send("0".encode("utf-8"))
-                range -= 1
+            recv = client.recv(1024).decode("utf-8").split(" ")
+            nick = recv[1]
+            password = recv[2]
+            recv = recv[0]
 
+            if recv == "L":
+                if data_base.log_in(nick, password):
+                    client.send("1".encode("utf-8"))
+                    return 1, nick
+                else:
+                    client.send("0".encode("utf-8"))
+                    range -= 1
+            elif recv == "R":
+                if data_base.if_used(nick):
+                    data_base.register_client(nick, password)
+                    client.send("1".encode("utf-8"))
+                    return 2, 0
+                else:
+                    client.send("0".encode("utf-8"))
         client.send("Too many mistakes try later".encode("utf-8"))
-        client.close()
+        return 0, 0
 
     except:
-        client.close()
-
+        return 0, 0
 
 def handle(client, is_admin, nick):
     while True:

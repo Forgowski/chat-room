@@ -19,7 +19,6 @@ def if_used(login):
     if cur.execute("SELECT * FROM userdata WHERE username = ?", (login,)).fetchone() is None:
         return 1
     else:
-        messagebox.showerror(title="Error", message="login not available")
         return 0
 
 
