@@ -84,14 +84,15 @@ def connect_account(client):
                 if data_base.if_used(nick):
                     data_base.register_client(nick, password)
                     client.send("1".encode("utf-8"))
-                    return 2, 0
+                    return 2, None
                 else:
                     client.send("0".encode("utf-8"))
         client.send("Too many mistakes try later".encode("utf-8"))
-        return 0, 0
+        return 0, None
 
     except:
-        return 0, 0
+        return 0, None
+
 
 def handle(client, is_admin, nick):
     while True:
